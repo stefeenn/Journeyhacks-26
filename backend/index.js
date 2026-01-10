@@ -17,7 +17,7 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 app.post('/upload', upload.single('image'), async (req, res) => {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
     const prompt = 'Convert this image to a single HTML file with CSS and JavaScript. Do not use any external frameworks or libraries.';
 
     const imageParts = [
