@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import './App.css';
 
+const extractHtml = (markdownText) => {
+  if (!markdownText) return '';
+  // Regex to find content between ```html and ``` OR just ``` and ```
+  const codeBlockRegex = /```(?:html)?([\s\S]*?)```/;
+  const match = markdownText.match(codeBlockRegex);
+  return match ? match[1].trim() : markdownText;
+};
+
 function App() {
   const [image, setImage] = useState(null);
-  const [html, setHtml] = useState('');
+  const [rawResponse, setRawResponse] = useState(''); // Stores full AI text (for middle box)
+  const [cleanHtml, setCleanHtml] = useState('');     // Stores only code (for preview)
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -25,7 +34,10 @@ function App() {
       });
 
       const data = await response.json();
-      setHtml(data.html);
+      const fullText = data.html; 
+      
+      setRawResponse(fullText);           // Put full text in the middle box
+      setCleanHtml(extractHtml(fullText)); // Put filtered code in the iframe
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Error uploading image. Please try again.');
@@ -35,7 +47,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Sketch to HTML</h1>
+        <h1>Draw and Scan</h1> 
         <input type="file" onChange={handleImageChange} />
         <button onClick={handleSubmit}>Generate HTML</button>
       </header>
@@ -46,11 +58,11 @@ function App() {
         </div>
         <div className="html-output">
           <h2>Generated HTML</h2>
-          <textarea value={html} readOnly />
+          <textarea value={rawResponse} readOnly />
         </div>
         <div className="live-preview">
           <h2>Live Preview</h2>
-          <iframe srcDoc={html} title="Live Preview" />
+          <iframe srcDoc={cleanHtml} title="Live Preview" />
         </div>
       </main>
     </div>
