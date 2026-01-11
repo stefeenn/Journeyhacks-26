@@ -17,7 +17,11 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 app.post('/upload', upload.single('image'), async (req, res) => {
   try {
+<<<<<<< HEAD
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+=======
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+>>>>>>> parent of 5ac9847 (gemini changes)
     const prompt = 'Convert this image to a single HTML file with CSS and JavaScript. Do not use any external frameworks or libraries.';
 
     const imageParts = [
